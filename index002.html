@@ -15,11 +15,12 @@
     }
 
     header {
-            text-align: center;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
     form {
         background: #ffffff;
         padding: 20px;
@@ -36,7 +37,8 @@
     }
 
     input[type="text"],
-    input[type="date"] {
+    input[type="date"],
+    input[type="password"] {
         width: 100%;
         padding: 8px;
         margin-bottom: 10px;
@@ -60,26 +62,45 @@
 <body>
     <form action="http://localhost:3000/submit" method="POST">
         <label for="fname">First Name:</label>
-        <input type="text" id="fname" name="fname" >
+        <input type="text" id="fname" name="fname">
         <br>
         <label for="lname">Last Name:</label>
-        <input type="text" id="lname" name="lname" >
+        <input type="text" id="lname" name="lname">
         <br>
         <label for="dept">Department:</label>
-        <input type="text" id="dept" name="dept" >
+        <input type="text" id="dept" name="dept">
         <br>
         <label for="salary">Salary:</label>
-        <input type="text" id="salary" name="salary" >
+        <input type="text" id="salary" name="salary">
         <br>
         <label for="jobtitle">Job Title:</label>
-        <input type="text" id="jobtitle" name="jobtitle" >
+        <input type="text" id="jobtitle" name="jobtitle">
         <br>
         <label for="hireDate">Hire Date:</label>
-        <input type="date" id="hireDate" name="hireDate" >
+        <input type="date" id="hireDate" name="hireDate">
         <br>
+        <label for="uname">Username:</label>
+        <input type="text" id="uname" name="uname">
+        <br>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password">
+        <br>
+
         <button type="submit">Submit</button>
     </form>
+
+    <p>Login Status:</p>
+    <div id="status"></div>
+    <hr>
     
+    <p>Login Below:</p>
+    <form id="loginForm" action="http://localhost:3000/login" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit" value="Submit">Login</button>
+    </form>
 </body>
 <script src="index002.js"></script>
 </html>
