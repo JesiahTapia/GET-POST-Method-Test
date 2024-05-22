@@ -28,7 +28,7 @@ app.use(session({
     secret: 'secret_key',
     resave: false,
     saveUninitialized: true
-})) // starts middleware session, resave prevents the session from ending until used, uninitialized saves a session that is new but not modified
+})) // starts middleware for session, resave prevents the session from ending until used, uninitialized saves a session that is new but not modified
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html') 

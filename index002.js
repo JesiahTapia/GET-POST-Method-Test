@@ -1,11 +1,11 @@
-require('dotenv').config()
+require('dotenv').config() // loads variables from .env file into process.env
 const express = require('express')
 const app = express()
 const mysql = require('mysql2')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser') // parse incoming request bodies in a middleware stored under req.body
 const session = require('express-session')
 const PORT = process.env.PORT
-
+// use imported tools 
 
 const connection = mysql.createConnection({
    host: process.env.DB_HOST,
@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
    password: process.env.DB_PASSWORD,
    database: process.env.DB_NAME
 })
-
+// beginning of connection to mysql
 
 connection.connect(err => {
    if (err) {
@@ -21,17 +21,18 @@ connection.connect(err => {
        return
    }
    console.log('Connected to MySQL')
-})
+})// connection to database
 
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true })) // needed to parse encoded objects
 
 
 app.use(session({
    secret: 'secret_key',
    resave: false,
    saveUninitialized: true
-}))
+}))  // starts middleware for session, resave prevents the session from ending until used, uninitialized saves a session that is new but not modified
+
 
 
 app.post('/login', (req, res) => {
@@ -44,13 +45,14 @@ app.post('/login', (req, res) => {
            console.error(err)
            res.status(500).send('Error querying the database')
            return
-       }
+       } // uses the variables provided to select a username, query checks every option
+      
 
 
        if (results.length === 0) {
            console.log('No user found with username:', username)
            res.status(401).send('Invalid username or password')
-           return
+           return // if no users are found and/or the details dont match, display message
        }
 
 
