@@ -30,14 +30,15 @@ app.use(session({ // tells express to use session middleware for management
    saveUninitialized: true
 })) // this block is needed for user specific details, secret is used to sign cookies, resave:false makes sure session is only saved when needed/changed, save:true keeps the session up for the client even if unchanged
 
-app.use(express.static(path.join(__dirname, 'public'))) // allows files to be pulled from my directory
+// Serve static files directly from the root directory
+app.use(express.static(path.join(__dirname))) 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html')) // route for the root URL
+    res.sendFile(path.join(__dirname, 'index002.html')) // serve the main HTML file
 })
 
 app.post('/login', (req, res) => { // route for login
-   const { username, password } = req.body
+   const { username, password } = req.body // destructuring
    console.log('Login attempt:', req.body)
 
    connection.query('SELECT * FROM employees WHERE UserName = ?', [username], (err, results) => {
@@ -61,9 +62,26 @@ app.post('/login', (req, res) => { // route for login
        }
 
        req.session.user = user
-       res.status(200).send(`Hello ${user.FirstName}, you are logged in! Full Name: ${user.FirstName} ${user.LastName}, Department is ${user.Department} and current position is ${user.JobTitle}. Annual Salary: ${user.Salary}`)
+       res.redirect('/user-info') // redirect to user info page after login
    })
 }) // if statements for login attempts, 
+
+app.get('/user-info', (req, res) => {
+    if (!req.session.user) {
+        res.redirect('/')
+        return
+    }
+    const user = req.session.user
+    const userInfoHTML = `
+        <h2>User Info</h2>
+        <p>Full Name: ${user.FirstName} ${user.LastName}</p>
+        <p>Department: ${user.Department}</p>
+        <p>Job Title: ${user.JobTitle}</p>
+        <p>Annual Salary: ${user.Salary}</p>
+        <a href="/logout">Logout</a>
+    `
+    res.send(userInfoHTML)
+})
 
 app.post('/submit', (req, res) => { // route for submissions
    const { fname, lname, dept, salary, jobtitle, hireDate, uname, password } = req.body
@@ -123,6 +141,18 @@ app.get('/employees', (req, res) => { // route for the employee table
    })  // table creation
 })
 
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err)
+            res.status(500).send('Error logging out')
+            return
+        }
+        res.clearCookie('connect.sid')
+        res.redirect('/')
+    })
+}) // route for logging out
+
 app.listen(PORT, () => {
-   console.log(`App is listening on port ${PORT}`)
-}) // start the server and listen to the commands going through
+   console.log(`Server is running on port ${PORT}`)
+}) // sets port for site
