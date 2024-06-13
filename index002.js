@@ -22,7 +22,7 @@ connection.connect(err => {
    }
    console.log('Connected to MySQL')
 })
-
+//ff
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
    secret: 'secret_key',
